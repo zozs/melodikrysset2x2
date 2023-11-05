@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: melodikrysset
+  labels:
+    app: melodikrysset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: melodikrysset
+  template:
+    metadata:
+      labels:
+        app: melodikrysset
+    spec:
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      containers:
+      - name: web
+        image: ghcr.io/zozs/melodikrysset2x2-web:latest
+        volumeMounts:
+        - name: shared-data
+          mountPath: /usr/share/nginx/html/pdf
+      - name: pdf
+        image: ghcr.io/zozs/melodikrysset2x2-pdf:latest
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/www/pdf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: melodikrysset
+spec:
+  selector:
+    app: melodikrysset
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: melodikrysset
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
+spec:
+  rules:
+  - host: melodikrysset.zozs.se
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: melodikrysset
+            port:
+              number: 80
+

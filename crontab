@@ -1,0 +1,2 @@
+# re-render melodikryss every monday morning
+5 0 * * 1   /var/www/create4.pl
