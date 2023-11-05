@@ -17,6 +17,13 @@ spec:
       volumes:
       - name: shared-data
         emptyDir: {}
+      initContainers:
+      - name: chown-shared
+        image: busybox:1.36
+        command: ['chown', '33:33', '/var/www/pdf'] # www-data UID/GID
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/www/pdf
       containers:
       - name: web
         image: ghcr.io/zozs/melodikrysset2x2-web:latest
