@@ -11,7 +11,9 @@ use File::Temp ();
 my @weeks;
 my $dt = DateTime->now();
 for (my $i = 0; $i < 4; $i++) {
-    push @weeks, $dt->strftime("%Yw%V");
+    my $week = $dt->strftime("%Yw%V");
+    $week =~ s/w0/w/; # fix 2024w01 -> 2024w1
+    push @weeks, $week;
     $dt->add(weeks => 1);
 }
 

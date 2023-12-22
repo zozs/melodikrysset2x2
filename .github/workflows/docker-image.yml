@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the PDF image
+      run: docker build . --file Dockerfile --tag ghcr.io/zozs/melodikrysset2x2-pdf:latest --target pdf
+
+    - name: Build the Web image
+      run: docker build . --file Dockerfile --tag ghcr.io/zozs/melodikrysset2x2-web:latest --target web
+
+    - name: Push PDF image
+      run: docker push ghcr.io/zozs/melodikrysset2x2-pdf:latest
+
+    - name: Push Web image
+      run: docker push ghcr.io/zozs/melodikrysset2x2-web:latest
