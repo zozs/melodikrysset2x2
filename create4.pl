@@ -7,15 +7,20 @@ use DateTime;
 use File::Copy;
 use File::Temp ();
 
-# Generate array with "2023w44 2023w45 2023w46" etc.
-my @weeks;
-my $dt = DateTime->now();
-for (my $i = 0; $i < 4; $i++) {
-    my $week = $dt->strftime("%Yw%V");
-    $week =~ s/w0/w/; # fix 2024w01 -> 2024w1
-    push @weeks, $week;
-    $dt->add(weeks => 1);
+sub generate_weeks {
+    # Generate array with "2023w44 2023w45 2023w46" etc.
+    my $dt = shift;
+    my @generated;
+    for (my $i = 0; $i < 4; $i++) {
+        my $week = $dt->strftime("%Yw%V");
+        $week =~ s/w0/w/; # fix 2024w01 -> 2024w1
+        push @generated, $week;
+        $dt->add(weeks => 1);
+    }
+    return @generated;
 }
+
+my @weeks = generate_weeks(DateTime->now());
 
 # Create temporary directory for data
 my $dir = File::Temp->newdir;

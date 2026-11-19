@@ -28,6 +28,6 @@ WORKDIR /var/www/pdf
 CMD /var/www/create4.pl && supercronic /var/www/crontab
 
 # Web server part
-FROM docker.io/nginxinc/nginx-unprivileged:alpine AS web
+FROM docker.io/nginx/nginx-unprivileged:alpine AS web
 
 COPY index.html /usr/share/nginx/html/index.html
